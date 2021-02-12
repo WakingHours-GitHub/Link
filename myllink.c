@@ -48,8 +48,50 @@ Link* seqFind(Link* head, unsigned int seq) {
 	for (int i = 0; i < seq; i++) {
 		p = p->next;
 	}
+	// 直接遍历不用判断，因为如果没找着，此时p应该是NULL
 	return p;
+
 }
+
+
+Link* insert(Link* head, unsigned int seq, ElementType key) {
+	Link* p = head, * temp = NULL;
+	if (seq == 0) {
+		if(!(temp = (Link*)malloc(LEN(Link)))) return NULL;
+		temp->next = p;
+		temp->data = key;
+		head = temp;
+		return head;
+	}
+	else {
+		if (!(p = seqFind(p, seq - 1))) return NULL;
+		
+		temp = p->next;
+		if (!(p->next = (Link*)malloc(LEN(Link))));
+		if (!(p = p->next)) return NULL;
+		p->data = key;
+		p->next = temp;
+		return head;
+	}
+
+}
+
+Link*  delSeqNode(Link* head, unsigned int seq) {
+	Link* p = head, *temp = NULL;
+	if (seq == 0) {
+		head = p->next;
+		return head;
+	}
+
+
+	// 直接找序号为seq之前的节点
+	p = seqFind(p, seq - 1);
+	// temp存储seq的下一个节点（即seq之前的下下个节点）
+	temp = p->next->next;
+	p->next = temp;
+	return head;
+}
+
 
 void addNode(Link *head, ElementType key) {
 	Link* p = head;
@@ -60,5 +102,10 @@ void addNode(Link *head, ElementType key) {
 	p->data = key; // 当出现指针NULL为引用..说明分配内存函数没有判断
 	p->next = NULL;
 }
-void deleteNode() {
+
+void deleteNode(Link * head) {
+	Link* p = head;
+	while (p->next->next) p = p->next;
+	p->next = NULL;
+
 }
